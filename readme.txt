@@ -1,7 +1,7 @@
 === Kalyvox AI Receptionist – Call Widget ===
 Contributors: kalyvox
 Tags: ai receptionist, call button, click to call, phone, customer service
-Requires at least: 6.5
+Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 7.4
 Stable tag: 1.0.0
