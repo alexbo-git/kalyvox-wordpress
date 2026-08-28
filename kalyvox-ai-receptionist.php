@@ -120,7 +120,7 @@ final class Kalyvox_AI_Receptionist {
 		$is_french = 0 === strpos( determine_locale(), 'fr_' );
 		$base = $is_french ? 'https://kalyvox.ai/' : 'https://kalyvox.ai/en/';
 		if ( 'help' === $destination ) { $base = $is_french ? 'https://kalyvox.ai/aide' : 'https://kalyvox.ai/en/help'; }
-		return add_query_arg( array( 'utm_source' => 'wordpress', 'utm_medium' => 'plugin', 'utm_campaign' => 'call_widget' ), $base );
+		return $base;
 	}
 
 	public static function render_settings_page() {
