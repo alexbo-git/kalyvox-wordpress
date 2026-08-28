@@ -4,7 +4,7 @@
  * Plugin URI:        https://kalyvox.ai/en/24-7-answering-service
  * Description:       Add a configurable click-to-call widget for your Kalyvox AI receptionist, plus a reusable shortcode for calls-to-action.
  * Version:           1.0.0
- * Requires at least: 6.5
+ * Requires at least: 6.8
  * Requires PHP:      7.4
  * Author:            Kalyvox
  * Author URI:        https://kalyvox.ai/
@@ -22,17 +22,12 @@ final class Kalyvox_AI_Receptionist {
 	const PAGE_SLUG = 'kalyvox-ai-receptionist';
 
 	public static function init() {
-		add_action( 'init', array( __CLASS__, 'load_textdomain' ) );
 		add_action( 'admin_menu', array( __CLASS__, 'add_settings_page' ) );
 		add_action( 'admin_init', array( __CLASS__, 'register_settings' ) );
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_admin_assets' ) );
 		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_frontend_assets' ) );
 		add_action( 'wp_footer', array( __CLASS__, 'render_floating_widget' ) );
 		add_shortcode( 'kalyvox_call_button', array( __CLASS__, 'render_shortcode' ) );
-	}
-
-	public static function load_textdomain() {
-		load_plugin_textdomain( 'kalyvox-ai-receptionist', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 	}
 
 	public static function defaults() {
