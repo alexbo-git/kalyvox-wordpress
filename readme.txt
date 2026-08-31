@@ -34,6 +34,13 @@ A Kalyvox account is not required for the plugin itself: the call widget works w
 
 Kalyvox website: https://kalyvox.ai/
 
+**External service**
+
+The plugin itself does not make network requests to Kalyvox. If you choose to configure a Kalyvox phone number, telephone calls to that number are handled by the Kalyvox service outside WordPress. A Kalyvox account is required to use the Kalyvox service, but not to use this plugin with another callable number.
+
+Kalyvox Terms of Service: https://kalyvox.ai/en/terms
+Kalyvox Privacy Policy: https://kalyvox.ai/en/privacy
+
 **Privacy**
 
 The plugin itself does not send visitor data to Kalyvox or any other external service. It renders a standard `tel:` hyperlink in the visitor's browser. A connection to a telephone service occurs only when the visitor chooses to call the configured number, outside WordPress.
