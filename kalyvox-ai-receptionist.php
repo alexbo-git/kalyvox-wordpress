@@ -4,14 +4,13 @@
  * Plugin URI:        https://kalyvox.ai/en/24-7-answering-service
  * Description:       Add a configurable click-to-call widget for your Kalyvox AI receptionist, plus a reusable shortcode for calls-to-action.
  * Version:           1.0.0
- * Requires at least: 6.8
+ * Requires at least: 6.5
  * Requires PHP:      7.4
  * Author:            Kalyvox
  * Author URI:        https://kalyvox.ai/
  * License:           GPL v2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       kalyvox-ai-receptionist
- * Domain Path:       /languages
+ * Text Domain:       kalyvox-ai-receptionist-call-widget
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -40,7 +39,7 @@ final class Kalyvox_AI_Receptionist {
 	}
 
 	public static function add_settings_page() {
-		add_options_page( __( 'Kalyvox AI Receptionist', 'kalyvox-ai-receptionist' ), __( 'Kalyvox', 'kalyvox-ai-receptionist' ), 'manage_options', self::PAGE_SLUG, array( __CLASS__, 'render_settings_page' ) );
+		add_options_page( __( 'Kalyvox AI Receptionist', 'kalyvox-ai-receptionist-call-widget' ), __( 'Kalyvox', 'kalyvox-ai-receptionist-call-widget' ), 'manage_options', self::PAGE_SLUG, array( __CLASS__, 'render_settings_page' ) );
 	}
 
 	public static function register_settings() {
@@ -79,7 +78,7 @@ final class Kalyvox_AI_Receptionist {
 	public static function render_floating_widget() {
 		$options = self::get_options();
 		if ( ! empty( $options['enabled'] ) && ! empty( $options['phone'] ) ) {
-			echo self::get_button_markup( $options ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo self::get_button_markup( $options ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Dynamic values are escaped in get_button_markup(); SVG is a static plugin asset.
 		}
 	}
 
@@ -97,7 +96,7 @@ final class Kalyvox_AI_Receptionist {
 	private static function get_button_markup( $options ) {
 		$phone = preg_replace( '/[^0-9+]/', '', (string) $options['phone'] );
 		if ( ! $phone ) { return ''; }
-		$label = ! empty( $options['label'] ) ? $options['label'] : __( 'Call us', 'kalyvox-ai-receptionist' );
+		$label = ! empty( $options['label'] ) ? $options['label'] : __( 'Call us', 'kalyvox-ai-receptionist-call-widget' );
 		$color = sanitize_hex_color( $options['color'] );
 		$classes = array( 'kalyvox-call-widget' );
 		if ( 'inline' === $options['position'] ) {
@@ -121,32 +120,32 @@ final class Kalyvox_AI_Receptionist {
 	public static function render_settings_page() {
 		if ( ! current_user_can( 'manage_options' ) ) { return; }
 		$options = self::get_options();
-		$default_label = __( 'Call us', 'kalyvox-ai-receptionist' );
+		$default_label = __( 'Call us', 'kalyvox-ai-receptionist-call-widget' );
 		$preview_label = ! empty( $options['label'] ) ? $options['label'] : $default_label;
 		?>
 		<div class="wrap kalyvox-admin">
 			<div class="kalyvox-admin__hero">
 				<div>
 					<div class="kalyvox-admin__brand">Kalyvox</div>
-					<h1><?php esc_html_e( 'Turn website visitors into phone conversations.', 'kalyvox-ai-receptionist' ); ?></h1>
-					<p><?php esc_html_e( 'Add a clear call button to your WordPress site and send callers to your Kalyvox AI receptionist. Kalyvox can answer 24/7, qualify requests, handle common questions, transfer calls, book appointments and send your team structured summaries and alerts.', 'kalyvox-ai-receptionist' ); ?></p>
-					<div class="kalyvox-admin__actions"><a class="button button-primary" href="<?php echo esc_url( self::get_kalyvox_url() ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Set up my AI receptionist', 'kalyvox-ai-receptionist' ); ?></a><a class="button" href="<?php echo esc_url( self::get_kalyvox_url( 'help' ) ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Kalyvox help center', 'kalyvox-ai-receptionist' ); ?></a></div>
+					<h1><?php esc_html_e( 'Turn website visitors into phone conversations.', 'kalyvox-ai-receptionist-call-widget' ); ?></h1>
+					<p><?php esc_html_e( 'Add a clear call button to your WordPress site and send callers to your Kalyvox AI receptionist. Kalyvox can answer 24/7, qualify requests, handle common questions, transfer calls, book appointments and send your team structured summaries and alerts.', 'kalyvox-ai-receptionist-call-widget' ); ?></p>
+					<div class="kalyvox-admin__actions"><a class="button button-primary" href="<?php echo esc_url( self::get_kalyvox_url() ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Set up my AI receptionist', 'kalyvox-ai-receptionist-call-widget' ); ?></a><a class="button" href="<?php echo esc_url( self::get_kalyvox_url( 'help' ) ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Kalyvox help center', 'kalyvox-ai-receptionist-call-widget' ); ?></a></div>
 				</div>
-				<div class="kalyvox-admin__feature-card" aria-hidden="true"><div class="kalyvox-admin__feature-row"><span>24/7</span><?php esc_html_e( 'Answers every call', 'kalyvox-ai-receptionist' ); ?></div><div class="kalyvox-admin__feature-row"><span>AI</span><?php esc_html_e( 'Qualifies the request', 'kalyvox-ai-receptionist' ); ?></div><div class="kalyvox-admin__feature-row"><span>→</span><?php esc_html_e( 'Routes or books when needed', 'kalyvox-ai-receptionist' ); ?></div><div class="kalyvox-admin__feature-row"><span>✓</span><?php esc_html_e( 'Sends a structured summary', 'kalyvox-ai-receptionist' ); ?></div></div>
+				<div class="kalyvox-admin__feature-card" aria-hidden="true"><div class="kalyvox-admin__feature-row"><span>24/7</span><?php esc_html_e( 'Answers every call', 'kalyvox-ai-receptionist-call-widget' ); ?></div><div class="kalyvox-admin__feature-row"><span>AI</span><?php esc_html_e( 'Qualifies the request', 'kalyvox-ai-receptionist-call-widget' ); ?></div><div class="kalyvox-admin__feature-row"><span>→</span><?php esc_html_e( 'Routes or books when needed', 'kalyvox-ai-receptionist-call-widget' ); ?></div><div class="kalyvox-admin__feature-row"><span>✓</span><?php esc_html_e( 'Sends a structured summary', 'kalyvox-ai-receptionist-call-widget' ); ?></div></div>
 			</div>
-			<div class="kalyvox-admin__steps"><div><strong>1</strong><span><?php esc_html_e( 'Get your Kalyvox phone number.', 'kalyvox-ai-receptionist' ); ?></span></div><div><strong>2</strong><span><?php esc_html_e( 'Paste it below and customize the button.', 'kalyvox-ai-receptionist' ); ?></span></div><div><strong>3</strong><span><?php esc_html_e( 'Save, visit your site and place a test call.', 'kalyvox-ai-receptionist' ); ?></span></div></div>
+			<div class="kalyvox-admin__steps"><div><strong>1</strong><span><?php esc_html_e( 'Get your Kalyvox phone number.', 'kalyvox-ai-receptionist-call-widget' ); ?></span></div><div><strong>2</strong><span><?php esc_html_e( 'Paste it below and customize the button.', 'kalyvox-ai-receptionist-call-widget' ); ?></span></div><div><strong>3</strong><span><?php esc_html_e( 'Save, visit your site and place a test call.', 'kalyvox-ai-receptionist-call-widget' ); ?></span></div></div>
 			<div class="kalyvox-admin__grid">
-				<div class="kalyvox-admin__panel"><h2><?php esc_html_e( 'Call widget settings', 'kalyvox-ai-receptionist' ); ?></h2><p class="description"><?php esc_html_e( 'No Kalyvox data is loaded on your website. The plugin only creates a standard tel: link to the number you configure.', 'kalyvox-ai-receptionist' ); ?></p>
+				<div class="kalyvox-admin__panel"><h2><?php esc_html_e( 'Call widget settings', 'kalyvox-ai-receptionist-call-widget' ); ?></h2><p class="description"><?php esc_html_e( 'No Kalyvox data is loaded on your website. The plugin only creates a standard tel: link to the number you configure.', 'kalyvox-ai-receptionist-call-widget' ); ?></p>
 				<form method="post" action="options.php"><?php settings_fields( 'kalyvox_ai_receptionist' ); ?>
-				<div class="kalyvox-field kalyvox-field--toggle"><label><input type="checkbox" name="<?php echo esc_attr( self::OPTION_NAME ); ?>[enabled]" value="1" <?php checked( 1, $options['enabled'] ); ?>><span><strong><?php esc_html_e( 'Enable floating call widget', 'kalyvox-ai-receptionist' ); ?></strong><small><?php esc_html_e( 'You can still use the shortcode even when the floating widget is disabled.', 'kalyvox-ai-receptionist' ); ?></small></span></label></div>
-				<div class="kalyvox-field"><label for="kalyvox-phone"><?php esc_html_e( 'Phone number', 'kalyvox-ai-receptionist' ); ?></label><input id="kalyvox-phone" class="regular-text" type="tel" name="<?php echo esc_attr( self::OPTION_NAME ); ?>[phone]" value="<?php echo esc_attr( $options['phone'] ); ?>" placeholder="+33 1 23 45 67 89"><p class="description"><?php esc_html_e( 'Use the Kalyvox number that answers your inbound calls. International format is recommended.', 'kalyvox-ai-receptionist' ); ?></p></div>
-				<div class="kalyvox-field"><label for="kalyvox-label"><?php esc_html_e( 'Button label', 'kalyvox-ai-receptionist' ); ?></label><input id="kalyvox-label" class="regular-text" type="text" name="<?php echo esc_attr( self::OPTION_NAME ); ?>[label]" value="<?php echo esc_attr( $options['label'] ); ?>" placeholder="<?php echo esc_attr( $default_label ); ?>" maxlength="80"><p class="description"><?php esc_html_e( 'Leave blank to use the translated default label.', 'kalyvox-ai-receptionist' ); ?></p></div>
-				<div class="kalyvox-admin__two-cols"><div class="kalyvox-field"><label><?php esc_html_e( 'Position', 'kalyvox-ai-receptionist' ); ?></label><select name="<?php echo esc_attr( self::OPTION_NAME ); ?>[position]"><option value="right" <?php selected( 'right', $options['position'] ); ?>><?php esc_html_e( 'Bottom right', 'kalyvox-ai-receptionist' ); ?></option><option value="left" <?php selected( 'left', $options['position'] ); ?>><?php esc_html_e( 'Bottom left', 'kalyvox-ai-receptionist' ); ?></option></select></div><div class="kalyvox-field"><label><?php esc_html_e( 'Visibility', 'kalyvox-ai-receptionist' ); ?></label><select name="<?php echo esc_attr( self::OPTION_NAME ); ?>[display]"><option value="all" <?php selected( 'all', $options['display'] ); ?>><?php esc_html_e( 'Desktop and mobile', 'kalyvox-ai-receptionist' ); ?></option><option value="mobile" <?php selected( 'mobile', $options['display'] ); ?>><?php esc_html_e( 'Mobile only', 'kalyvox-ai-receptionist' ); ?></option></select></div></div>
-				<div class="kalyvox-field"><label><?php esc_html_e( 'Button color', 'kalyvox-ai-receptionist' ); ?></label><div class="kalyvox-color-field"><input type="color" name="<?php echo esc_attr( self::OPTION_NAME ); ?>[color]" value="<?php echo esc_attr( $options['color'] ); ?>"><code><?php echo esc_html( $options['color'] ); ?></code></div></div>
-				<?php submit_button( __( 'Save widget settings', 'kalyvox-ai-receptionist' ) ); ?></form></div>
-				<div><div class="kalyvox-admin__panel kalyvox-admin__preview"><h2><?php esc_html_e( 'Preview', 'kalyvox-ai-receptionist' ); ?></h2><p><?php esc_html_e( 'The public widget uses your theme fonts and stays above page content.', 'kalyvox-ai-receptionist' ); ?></p><div class="kalyvox-admin__preview-stage"><div class="kalyvox-admin__preview-button" style="--kalyvox-preview-color: <?php echo esc_attr( $options['color'] ); ?>"><span aria-hidden="true">☎</span><?php echo esc_html( $preview_label ); ?></div></div></div>
-				<div class="kalyvox-admin__panel"><h2><?php esc_html_e( 'Use it inside a page', 'kalyvox-ai-receptionist' ); ?></h2><p><?php esc_html_e( 'Add the configured call button anywhere WordPress accepts shortcodes:', 'kalyvox-ai-receptionist' ); ?></p><code>[kalyvox_call_button]</code><p><?php esc_html_e( 'Optional overrides:', 'kalyvox-ai-receptionist' ); ?></p><code>[kalyvox_call_button label=&quot;Call sales&quot; phone=&quot;+33123456789&quot;]</code></div>
-				<div class="kalyvox-admin__panel kalyvox-admin__note"><h2><?php esc_html_e( 'Not a Kalyvox customer yet?', 'kalyvox-ai-receptionist' ); ?></h2><p><?php esc_html_e( 'The widget works with any callable phone number. With Kalyvox behind that number, callers can be answered and qualified automatically even when your team is unavailable.', 'kalyvox-ai-receptionist' ); ?></p><a href="<?php echo esc_url( self::get_kalyvox_url() ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Discover Kalyvox', 'kalyvox-ai-receptionist' ); ?> →</a></div></div>
+				<div class="kalyvox-field kalyvox-field--toggle"><label><input type="checkbox" name="<?php echo esc_attr( self::OPTION_NAME ); ?>[enabled]" value="1" <?php checked( 1, $options['enabled'] ); ?>><span><strong><?php esc_html_e( 'Enable floating call widget', 'kalyvox-ai-receptionist-call-widget' ); ?></strong><small><?php esc_html_e( 'You can still use the shortcode even when the floating widget is disabled.', 'kalyvox-ai-receptionist-call-widget' ); ?></small></span></label></div>
+				<div class="kalyvox-field"><label for="kalyvox-phone"><?php esc_html_e( 'Phone number', 'kalyvox-ai-receptionist-call-widget' ); ?></label><input id="kalyvox-phone" class="regular-text" type="tel" name="<?php echo esc_attr( self::OPTION_NAME ); ?>[phone]" value="<?php echo esc_attr( $options['phone'] ); ?>" placeholder="+33 1 23 45 67 89"><p class="description"><?php esc_html_e( 'Use the Kalyvox number that answers your inbound calls. International format is recommended.', 'kalyvox-ai-receptionist-call-widget' ); ?></p></div>
+				<div class="kalyvox-field"><label for="kalyvox-label"><?php esc_html_e( 'Button label', 'kalyvox-ai-receptionist-call-widget' ); ?></label><input id="kalyvox-label" class="regular-text" type="text" name="<?php echo esc_attr( self::OPTION_NAME ); ?>[label]" value="<?php echo esc_attr( $options['label'] ); ?>" placeholder="<?php echo esc_attr( $default_label ); ?>" maxlength="80"><p class="description"><?php esc_html_e( 'Leave blank to use the translated default label.', 'kalyvox-ai-receptionist-call-widget' ); ?></p></div>
+				<div class="kalyvox-admin__two-cols"><div class="kalyvox-field"><label><?php esc_html_e( 'Position', 'kalyvox-ai-receptionist-call-widget' ); ?></label><select name="<?php echo esc_attr( self::OPTION_NAME ); ?>[position]"><option value="right" <?php selected( 'right', $options['position'] ); ?>><?php esc_html_e( 'Bottom right', 'kalyvox-ai-receptionist-call-widget' ); ?></option><option value="left" <?php selected( 'left', $options['position'] ); ?>><?php esc_html_e( 'Bottom left', 'kalyvox-ai-receptionist-call-widget' ); ?></option></select></div><div class="kalyvox-field"><label><?php esc_html_e( 'Visibility', 'kalyvox-ai-receptionist-call-widget' ); ?></label><select name="<?php echo esc_attr( self::OPTION_NAME ); ?>[display]"><option value="all" <?php selected( 'all', $options['display'] ); ?>><?php esc_html_e( 'Desktop and mobile', 'kalyvox-ai-receptionist-call-widget' ); ?></option><option value="mobile" <?php selected( 'mobile', $options['display'] ); ?>><?php esc_html_e( 'Mobile only', 'kalyvox-ai-receptionist-call-widget' ); ?></option></select></div></div>
+				<div class="kalyvox-field"><label><?php esc_html_e( 'Button color', 'kalyvox-ai-receptionist-call-widget' ); ?></label><div class="kalyvox-color-field"><input type="color" name="<?php echo esc_attr( self::OPTION_NAME ); ?>[color]" value="<?php echo esc_attr( $options['color'] ); ?>"><code><?php echo esc_html( $options['color'] ); ?></code></div></div>
+				<?php submit_button( __( 'Save widget settings', 'kalyvox-ai-receptionist-call-widget' ) ); ?></form></div>
+				<div><div class="kalyvox-admin__panel kalyvox-admin__preview"><h2><?php esc_html_e( 'Preview', 'kalyvox-ai-receptionist-call-widget' ); ?></h2><p><?php esc_html_e( 'The public widget uses your theme fonts and stays above page content.', 'kalyvox-ai-receptionist-call-widget' ); ?></p><div class="kalyvox-admin__preview-stage"><div class="kalyvox-admin__preview-button" style="--kalyvox-preview-color: <?php echo esc_attr( $options['color'] ); ?>"><span aria-hidden="true">☎</span><?php echo esc_html( $preview_label ); ?></div></div></div>
+				<div class="kalyvox-admin__panel"><h2><?php esc_html_e( 'Use it inside a page', 'kalyvox-ai-receptionist-call-widget' ); ?></h2><p><?php esc_html_e( 'Add the configured call button anywhere WordPress accepts shortcodes:', 'kalyvox-ai-receptionist-call-widget' ); ?></p><code>[kalyvox_call_button]</code><p><?php esc_html_e( 'Optional overrides:', 'kalyvox-ai-receptionist-call-widget' ); ?></p><code>[kalyvox_call_button label=&quot;Call sales&quot; phone=&quot;+33123456789&quot;]</code></div>
+				<div class="kalyvox-admin__panel kalyvox-admin__note"><h2><?php esc_html_e( 'Not a Kalyvox customer yet?', 'kalyvox-ai-receptionist-call-widget' ); ?></h2><p><?php esc_html_e( 'The widget works with any callable phone number. With Kalyvox behind that number, callers can be answered and qualified automatically even when your team is unavailable.', 'kalyvox-ai-receptionist-call-widget' ); ?></p><a href="<?php echo esc_url( self::get_kalyvox_url() ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Discover Kalyvox', 'kalyvox-ai-receptionist-call-widget' ); ?> →</a></div></div>
 			</div>
 		</div><?php
 	}
