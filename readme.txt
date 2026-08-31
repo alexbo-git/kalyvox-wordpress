@@ -1,7 +1,7 @@
 === Kalyvox AI Receptionist – Call Widget ===
-Contributors: kalyvox
+Contributors: alexklx
 Tags: ai receptionist, call button, click to call, phone, customer service
-Requires at least: 6.8
+Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 7.4
 Stable tag: 1.0.0
@@ -76,7 +76,7 @@ Yes. Use the `[kalyvox_call_button]` shortcode. You can disable the floating wid
 
 = Is the plugin translatable? =
 
-Yes. The admin and default button label ship in English, French, Spanish and German, and all strings use the `kalyvox-ai-receptionist` text domain.
+Yes. All user-facing strings use the `kalyvox-ai-receptionist-call-widget` text domain and can be translated through WordPress.org's standard translation system.
 
 == Screenshots ==
 
@@ -93,4 +93,3 @@ Yes. The admin and default button label ship in English, French, Spanish and Ger
 * Position and color controls.
 * Configurable button label.
 * Reusable call-button shortcode.
-* Bundled English, French, Spanish and German interface support.
