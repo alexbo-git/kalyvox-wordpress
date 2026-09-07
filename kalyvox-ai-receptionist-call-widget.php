@@ -109,6 +109,7 @@ final class Kalyvox_AI_Receptionist {
 		return sprintf( '<a class="%1$s" href="tel:%2$s" style="background-color:%3$s" aria-label="%4$s"><span aria-hidden="true">☎</span><span>%5$s</span></a>', esc_attr( implode( ' ', $classes ) ), esc_attr( $phone ), esc_attr( $color ? $color : '#0f766e' ), esc_attr( $label ), esc_html( $label ) );
 	}
 
+
 	private static function get_allowed_button_html() {
 		return array(
 			'a' => array(
