@@ -1,0 +1,73 @@
+name: Publish to WordPress.org
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout approved plugin source
+        uses: actions/checkout@v4
+        with:
+          ref: feat/initial-plugin
+
+      - name: Install Subversion
+        run: sudo apt-get update && sudo apt-get install -y subversion
+
+      - name: Publish version 1.0.0 to WordPress.org SVN
+        env:
+          SVN_PASSWORD: ${{ secrets.WP_SVN_PASSWORD }}
+        run: |
+          set -euo pipefail
+
+          SLUG="kalyvox-ai-receptionist-call-widget"
+          VERSION="1.0.0"
+          SVN_URL="https://plugins.svn.wordpress.org/${SLUG}"
+          SVN_USER="alexklx"
+          SVN_DIR="$(mktemp -d)"
+
+          if [ -z "${SVN_PASSWORD:-}" ]; then
+            echo "Missing GitHub Actions secret: WP_SVN_PASSWORD"
+            exit 1
+          fi
+
+          svn checkout "$SVN_URL" "$SVN_DIR" \
+            --username "$SVN_USER" \
+            --password "$SVN_PASSWORD" \
+            --non-interactive \
+            --no-auth-cache
+
+          mkdir -p "$SVN_DIR/trunk" "$SVN_DIR/tags"
+          find "$SVN_DIR/trunk" -mindepth 1 -maxdepth 1 -exec rm -rf {} +
+
+          cp kalyvox-ai-receptionist-call-widget.php "$SVN_DIR/trunk/"
+          cp readme.txt "$SVN_DIR/trunk/"
+          cp uninstall.php "$SVN_DIR/trunk/"
+          cp -R assets "$SVN_DIR/trunk/"
+
+          cd "$SVN_DIR"
+          svn add --force trunk
+          svn status
+
+          if svn ls "$SVN_URL/tags/$VERSION" \
+            --username "$SVN_USER" \
+            --password "$SVN_PASSWORD" \
+            --non-interactive \
+            --no-auth-cache >/dev/null 2>&1; then
+            echo "Tag $VERSION already exists; refusing to overwrite it."
+            exit 1
+          fi
+
+          svn copy trunk "tags/$VERSION"
+          svn add --force "tags/$VERSION"
+
+          svn commit \
+            -m "Release version $VERSION" \
+            --username "$SVN_USER" \
+            --password "$SVN_PASSWORD" \
+            --non-interactive \
+            --no-auth-cache
